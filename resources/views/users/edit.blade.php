@@ -57,6 +57,17 @@
                     @enderror
                 </div>
 
+                {{-- No. HP --}}
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">No. HP (WhatsApp)</label>
+                    <input type="tel" name="no_hp" value="{{ old('no_hp', $user->no_hp) }}" inputmode="numeric"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="081234567890" required>
+                    @error('no_hp')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 {{-- Password --}}
                 <div class="mb-4">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>

@@ -34,7 +34,7 @@
 
         {{-- Table --}}
         <div class="overflow-x-auto">
-            <table class="w-full">
+        <table class="w-full min-w-[600px]">
                 <thead class="bg-gray-50 border-b border-gray-100">
                     <tr>
                         <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">User</th>
@@ -56,6 +56,7 @@
                                 <div>
                                     <div class="font-semibold text-gray-800">{{ $user->nama_lengkap }}</div>
                                     <div class="text-gray-400 text-xs">{{ $user->email }}</div>
+                                    <div class="text-gray-400 text-xs">{{ $user->no_hp ? '+' . $user->no_hp : 'No. HP belum diisi' }}</div>
                                 </div>
                             </div>
                         </td>

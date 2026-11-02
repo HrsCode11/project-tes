@@ -11,14 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
 
         $middleware->redirectGuestsTo('/login');
 
-        $middleware->redirectUsersTo(function () {
+        $middleware->redirectUsersTo(function ($request) {
             $user = auth()->user();
+
             if (!$user) return '/login';
 
             return match($user->role) {
@@ -27,6 +29,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 default     => '/warga/dashboard',
             };
         });
+
+        $middleware->validateCsrfTokens(except: [
+            'midtrans/webhook',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

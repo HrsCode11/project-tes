@@ -20,7 +20,6 @@ class LaporanExport implements WithMultipleSheets
         if ($this->jenis === 'bulanan') {
             return [
                 new Sheets\RingkasanBulananSheet($this->data),
-                new Sheets\RincianBulananSheet($this->data),
             ];
         } elseif ($this->jenis === 'tahunan') {
             return [
@@ -29,7 +28,6 @@ class LaporanExport implements WithMultipleSheets
         } else {
             return [
                 new Sheets\RingkasanIuranSheet($this->data),
-                new Sheets\DetailIuranSheet($this->data),
             ];
         }
     }

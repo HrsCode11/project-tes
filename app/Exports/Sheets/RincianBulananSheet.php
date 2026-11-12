@@ -15,6 +15,11 @@ class RincianBulananSheet implements FromArray, WithTitle, WithStyles, WithColum
 {
     protected array $data;
 
+    protected array $sectionRows = [];
+    protected array $headerRows  = [];
+    protected array $totalRows   = [];
+    protected array $dataRanges  = [];
+
     public function __construct(array $data)
     {
         $this->data = $data;
@@ -22,70 +27,119 @@ class RincianBulananSheet implements FromArray, WithTitle, WithStyles, WithColum
 
     public function array(): array
     {
+        $d    = $this->data;
         $rows = [];
+        $row  = 0;
 
-        // Header
-        $rows[] = ['Tanggal', 'Keterangan', 'Jenis', 'Pemasukan (Rp)', 'Pengeluaran (Rp)', 'Saldo Berjalan (Rp)'];
+        // 1. Pemasukan dari Iuran
+        if ($d['pembayaran']->count() > 0) {
+            $rekapIuran = $d['pembayaran']->groupBy(fn($p) => $p->tagihan->iuran_id);
 
-        $saldo = 0;
+            $rows[] = ['PEMASUKAN DARI IURAN', '', '', '', ''];
+            $this->sectionRows[] = ++$row;
 
-        // Gabungkan semua transaksi dan sort by tanggal
-        $transaksi = collect();
+            $rows[] = ['Nama Iuran', 'Jumlah Pembayar', 'Nominal / Warga (Rp)', 'Total Terkumpul (Rp)', ''];
+            $this->headerRows[] = [$row + 1, 'D'];
+            $row++;
 
-        foreach ($this->data['pembayaran'] as $p) {
-            $transaksi->push([
-                'tgl'    => $p->tgl_bayar,
-                'ket'    => 'Iuran ' . $p->tagihan->iuran->nama_iuran . ' — ' . $p->warga->nama_lengkap,
-                'jenis'  => 'Pemasukan Iuran',
-                'masuk'  => (int) $p->nominal,
-                'keluar' => 0,
-            ]);
-        }
+            $startData = $row + 1;
+            foreach ($rekapIuran as $grup) {
+                $itemPertama = $grup->first();
+                $rows[] = [
+                    $itemPertama->tagihan->iuran->nama_iuran,
+                    $grup->count() . ' warga',
+                    (int) $itemPertama->nominal,
+                    (int) $grup->sum('nominal'),
+                    '',
+                ];
+                $row++;
+            }
+            $endData = $row;
 
-        foreach ($this->data['pemasukan'] as $p) {
-            $transaksi->push([
-                'tgl'    => $p->tgl_masuk,
-                'ket'    => $p->keterangan . ($p->sumber ? ' (dari: ' . $p->sumber . ')' : ''),
-                'jenis'  => 'Pemasukan ' . ucfirst($p->kategori),
-                'masuk'  => (int) $p->jumlah,
-                'keluar' => 0,
-            ]);
-        }
-
-        foreach ($this->data['pengeluaran'] as $p) {
-            $transaksi->push([
-                'tgl'    => $p->tgl_keluar,
-                'ket'    => $p->keterangan . ($p->penerima ? ' (ke: ' . $p->penerima . ')' : ''),
-                'jenis'  => 'Pengeluaran ' . ucfirst($p->kategori),
-                'masuk'  => 0,
-                'keluar' => (int) $p->jumlah,
-            ]);
-        }
-
-        // Sort by tanggal
-        $transaksi = $transaksi->sortBy('tgl')->values();
-
-        foreach ($transaksi as $t) {
-            $saldo += $t['masuk'] - $t['keluar'];
             $rows[] = [
-                $t['tgl']->format('d/m/Y'),
-                $t['ket'],
-                $t['jenis'],
-                $t['masuk'] > 0 ? $t['masuk'] : '',
-                $t['keluar'] > 0 ? $t['keluar'] : '',
-                $saldo,
+                'Total (' . $d['pembayaran']->count() . ' transaksi)',
+                '',
+                '',
+                (int) $d['totalPemasukanIuran'],
+                '',
             ];
+            $this->totalRows[]  = [++$row, 'D', '10B981'];
+            $this->dataRanges[] = [$startData - 1, $row, 'D', ['C', 'D']];
+
+            $rows[] = ['', '', '', '', ''];
+            $row++;
         }
 
-        // Baris total
-        $rows[] = [
-            '',
-            '',
-            'TOTAL',
-            $this->data['totalPemasukan'],
-            $this->data['totalPengeluaran'],
-            $this->data['saldoAkhir'],
-        ];
+        // 2. Pemasukan Non-Iuran
+        if ($d['pemasukan']->count() > 0) {
+            $rows[] = ['PEMASUKAN NON-IURAN', '', '', '', ''];
+            $this->sectionRows[] = ++$row;
+
+            $rows[] = ['Tanggal', 'Keterangan', 'Kategori', 'Sumber', 'Jumlah (Rp)'];
+            $this->headerRows[] = [$row + 1, 'E'];
+            $row++;
+
+            $startData = $row + 1;
+            foreach ($d['pemasukan'] as $p) {
+                $rows[] = [
+                    $p->tgl_masuk->format('d/m/Y'),
+                    $p->keterangan,
+                    ucfirst($p->kategori),
+                    $p->sumber ?? '—',
+                    (int) $p->jumlah,
+                ];
+                $row++;
+            }
+
+            $rows[] = [
+                'Total',
+                '',
+                '',
+                '',
+                (int) $d['totalPemasukanNonIuran'],
+            ];
+            $this->totalRows[]  = [++$row, 'E', '10B981'];
+            $this->dataRanges[] = [$startData - 1, $row, 'E', ['E']];
+
+            $rows[] = ['', '', '', '', ''];
+            $row++;
+        }
+
+        // 3. Pengeluaran
+        if ($d['pengeluaran']->count() > 0) {
+            $rows[] = ['PENGELUARAN', '', '', '', ''];
+            $this->sectionRows[] = ++$row;
+
+            $rows[] = ['Tanggal', 'Keterangan', 'Kategori', 'Penerima', 'Jumlah (Rp)'];
+            $this->headerRows[] = [$row + 1, 'E'];
+            $row++;
+
+            $startData = $row + 1;
+            foreach ($d['pengeluaran'] as $p) {
+                $rows[] = [
+                    $p->tgl_keluar->format('d/m/Y'),
+                    $p->keterangan,
+                    ucfirst($p->kategori),
+                    $p->penerima ?? '—',
+                    (int) $p->jumlah,
+                ];
+                $row++;
+            }
+
+            $rows[] = [
+                'Total',
+                '',
+                '',
+                '',
+                (int) $d['totalPengeluaran'],
+            ];
+            $this->totalRows[]  = [++$row, 'E', 'EF4444'];
+            $this->dataRanges[] = [$startData - 1, $row, 'E', ['E']];
+        }
+
+        if (empty($rows)) {
+            $rows[] = ['Tidak ada transaksi pada bulan ini.'];
+        }
 
         return $rows;
     }
@@ -98,52 +152,55 @@ class RincianBulananSheet implements FromArray, WithTitle, WithStyles, WithColum
     public function columnWidths(): array
     {
         return [
-            'A' => 12,
-            'B' => 45,
+            'A' => 30,
+            'B' => 35,
             'C' => 22,
-            'D' => 20,
-            'E' => 20,
-            'F' => 22,
+            'D' => 24,
+            'E' => 22,
         ];
     }
 
     public function styles(Worksheet $sheet): array
     {
-        $lastRow = $sheet->getHighestRow();
+        // Judul tiap bagian
+        foreach ($this->sectionRows as $r) {
+            $sheet->getStyle("A{$r}")->applyFromArray([
+                'font' => ['bold' => true, 'size' => 12, 'color' => ['rgb' => '1B2A4A']],
+            ]);
+        }
 
-        // Style header
-        $headerStyle = [
-            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '1B2A4A']],
-            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
-            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => '334155']]],
-        ];
+        // Header tabel
+        foreach ($this->headerRows as [$r, $endCol]) {
+            $sheet->getStyle("A{$r}:{$endCol}{$r}")->applyFromArray([
+                'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '1B2A4A']],
+                'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+            ]);
+        }
 
-        // Style baris total
-        $totalStyle = [
-            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '1B2A4A']],
-        ];
+        // Border & format angka per tabel
+        foreach ($this->dataRanges as [$startRow, $endRow, $endCol, $numCols]) {
+            $sheet->getStyle("A{$startRow}:{$endCol}{$endRow}")->applyFromArray([
+                'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => 'E2E8F0']]],
+            ]);
 
-        $sheet->getStyle("A1:F1")->applyFromArray($headerStyle);
-        $sheet->getStyle("A{$lastRow}:F{$lastRow}")->applyFromArray($totalStyle);
-
-        // Border semua data
-        $sheet->getStyle("A1:F{$lastRow}")->applyFromArray([
-            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => 'E2E8F0']]],
-        ]);
-
-        // Format angka kolom D, E, F
-        $sheet->getStyle("D2:F{$lastRow}")->getNumberFormat()
-            ->setFormatCode('#,##0');
-
-        // Warna baris data selang-seling
-        for ($i = 2; $i < $lastRow; $i++) {
-            if ($i % 2 === 0) {
-                $sheet->getStyle("A{$i}:F{$i}")->applyFromArray([
-                    'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'F8FAFF']],
-                ]);
+            foreach ($numCols as $col) {
+                $dataStart = $startRow + 1;
+                $sheet->getStyle("{$col}{$dataStart}:{$col}{$endRow}")->getNumberFormat()
+                    ->setFormatCode('#,##0');
             }
+        }
+
+        // Baris total tiap tabel
+        foreach ($this->totalRows as [$r, $endCol, $color]) {
+            $prevCol = chr(ord($endCol) - 1);
+            $sheet->mergeCells("A{$r}:{$prevCol}{$r}");
+            $sheet->getStyle("A{$r}:{$endCol}{$r}")->applyFromArray([
+                'font' => ['bold' => true],
+                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'F8FAFF']],
+            ]);
+            $sheet->getStyle("A{$r}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $sheet->getStyle("{$endCol}{$r}")->getFont()->getColor()->setRGB($color);
         }
 
         return [];

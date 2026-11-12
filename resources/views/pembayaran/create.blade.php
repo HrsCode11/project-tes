@@ -14,6 +14,12 @@
 
             <div class="p-6">
 
+                @if ($errors->any())
+                    <div class="mb-5 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
                 {{-- STEP 1: Cari Warga --}}
                 <div class="mb-5">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">

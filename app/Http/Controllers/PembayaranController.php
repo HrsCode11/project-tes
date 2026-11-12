@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Iuran;
 use App\Models\Pembayaran;
 use App\Models\Tagihan;
 use Illuminate\Http\Request;
@@ -25,9 +26,17 @@ class PembayaranController extends Controller
 
     public function create()
     {
-        // Tagihan yang belum lunas, beserta data warga & iurannya
+        // Iuran aktif yang deadline-nya sudah lewat otomatis ditutup
+        Iuran::where('status', 'aktif')
+            ->where('deadline', '<', now()->toDateString())
+            ->update(['status' => 'ditutup']);
+
+        // Tagihan yang belum lunas dari iuran yang masih aktif
         $tagihan = Tagihan::with(['warga', 'iuran'])
             ->whereIn('status', ['belum_bayar', 'menunggu'])
+            ->whereHas('iuran', function ($q) {
+                $q->where('status', 'aktif');
+            })
             ->whereDoesntHave('pembayaran', function ($q) {
                 $q->where('status', 'lunas');
             })
@@ -43,10 +52,14 @@ class PembayaranController extends Controller
             'catatan'    => ['nullable', 'string', 'max:255'],
         ]);
 
-        $tagihan = Tagihan::findOrFail($request->tagihan_id);
+        $tagihan = Tagihan::with('iuran')->findOrFail($request->tagihan_id);
 
         if ($tagihan->status === 'lunas') {
             return back()->withErrors(['tagihan_id' => 'Tagihan ini sudah lunas.']);
+        }
+
+        if ($tagihan->iuran->status !== 'aktif') {
+            return back()->withErrors(['tagihan_id' => 'Iuran untuk tagihan ini sudah ditutup.']);
         }
 
         DB::transaction(function () use ($tagihan, $request) {

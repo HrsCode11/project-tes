@@ -218,6 +218,40 @@
 
 </div>
 
+{{-- MODAL ALERT (Success / Error / Info) --}}
+<div id="global-alert-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center transform transition-all">
+        <div id="global-alert-icon" class="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center"></div>
+        <h3 id="global-alert-title" class="text-lg font-bold text-gray-800 mb-2"></h3>
+        <p id="global-alert-message" class="text-sm text-gray-600 mb-6 leading-relaxed"></p>
+        <button type="button" id="global-alert-btn" onclick="closeModalAlert()"
+            class="w-full font-semibold py-2.5 px-4 rounded-xl text-white text-sm transition">
+            Mengerti
+        </button>
+    </div>
+</div>
+
+{{-- MODAL KONFIRMASI (Hapus / Tindakan) --}}
+<div id="global-confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center transform transition-all">
+        <div class="w-14 h-14 rounded-full bg-red-100 text-red-600 mx-auto mb-4 flex items-center justify-center">
+            <x-icon name="exclamation-triangle" class="w-7 h-7" />
+        </div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2">Konfirmasi Hapus</h3>
+        <p id="global-confirm-message" class="text-sm text-gray-600 mb-6 leading-relaxed"></p>
+        <div class="flex gap-3">
+            <button type="button" onclick="closeModalConfirm()"
+                class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 px-4 rounded-xl text-sm transition">
+                Batal
+            </button>
+            <button type="button" id="global-confirm-yes"
+                class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition">
+                Ya, Hapus
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
@@ -235,6 +269,108 @@
             overlay.classList.add('hidden');
         }
     }
+
+    // ── Modal Alert Global ──
+    let alertCallback = null;
+
+    function showModalAlert(type, message, onClose = null) {
+        const modal = document.getElementById('global-alert-modal');
+        const icon  = document.getElementById('global-alert-icon');
+        const title = document.getElementById('global-alert-title');
+        const msg   = document.getElementById('global-alert-message');
+        const btn   = document.getElementById('global-alert-btn');
+
+        alertCallback = onClose;
+        msg.textContent = message;
+
+        if (type === 'success') {
+            icon.className = 'w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center bg-green-100 text-green-600';
+            icon.innerHTML = `<svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>`;
+            title.textContent = 'Berhasil';
+            btn.className = 'w-full font-semibold py-2.5 px-4 rounded-xl text-white text-sm transition bg-green-500 hover:bg-green-600';
+        } else if (type === 'warning') {
+            icon.className = 'w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center bg-orange-100 text-orange-600';
+            icon.innerHTML = `<svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>`;
+            title.textContent = 'Informasi';
+            btn.className = 'w-full font-semibold py-2.5 px-4 rounded-xl text-white text-sm transition bg-orange-500 hover:bg-orange-600';
+        } else {
+            icon.className = 'w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center bg-red-100 text-red-600';
+            icon.innerHTML = `<svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>`;
+            title.textContent = 'Perhatian';
+            btn.className = 'w-full font-semibold py-2.5 px-4 rounded-xl text-white text-sm transition bg-red-500 hover:bg-red-600';
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeModalAlert() {
+        const modal = document.getElementById('global-alert-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        if (typeof alertCallback === 'function') {
+            const cb = alertCallback;
+            alertCallback = null;
+            cb();
+        }
+    }
+
+    // ── Modal Konfirmasi Global untuk Form [data-konfirmasi] ──
+    let formToConfirm = null;
+
+    function openModalConfirm(form, message) {
+        formToConfirm = form;
+        document.getElementById('global-confirm-message').textContent = message;
+        const modal = document.getElementById('global-confirm-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeModalConfirm() {
+        formToConfirm = null;
+        const modal = document.getElementById('global-confirm-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    document.getElementById('global-confirm-yes').addEventListener('click', function () {
+        if (formToConfirm) {
+            formToConfirm.dataset.confirmed = 'true';
+            formToConfirm.submit();
+        }
+    });
+
+    document.addEventListener('submit', function (e) {
+        const form = e.target;
+        if (form.dataset && form.dataset.konfirmasi && form.dataset.confirmed !== 'true') {
+            e.preventDefault();
+            openModalConfirm(form, form.dataset.konfirmasi);
+        }
+    });
+
+    // Tutup modal saat klik area luar atau tekan Escape
+    document.getElementById('global-alert-modal').addEventListener('click', function (e) {
+        if (e.target === this) closeModalAlert();
+    });
+    document.getElementById('global-confirm-modal').addEventListener('click', function (e) {
+        if (e.target === this) closeModalConfirm();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeModalAlert();
+            closeModalConfirm();
+        }
+    });
+
+    @if(session('success'))
+        document.addEventListener('DOMContentLoaded', () => {
+            showModalAlert('success', @json(session('success')));
+        });
+    @elseif(session('error'))
+        document.addEventListener('DOMContentLoaded', () => {
+            showModalAlert('error', @json(session('error')));
+        });
+    @endif
 </script>
 
 </body>

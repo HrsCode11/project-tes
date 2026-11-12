@@ -158,7 +158,7 @@
     .then(res => res.json())
     .then(data => {
         if (data.error) {
-            alert(data.error);
+            showModalAlert('error', data.error);
             btn.disabled = false;
             btn.innerHTML = '💳 Bayar via QRIS / Virtual Account';
             return;
@@ -166,15 +166,13 @@
 
         snap.pay(data.snap_token, {
             onSuccess: function(result) {
-                alert('Pembayaran berhasil!');
-                location.reload();
+                showModalAlert('success', 'Pembayaran berhasil!', () => location.reload());
             },
             onPending: function(result) {
-                alert('Menunggu pembayaran kamu.');
-                location.reload();
+                showModalAlert('warning', 'Menunggu pembayaran kamu.', () => location.reload());
             },
             onError: function(result) {
-                alert('Pembayaran gagal.');
+                showModalAlert('error', 'Pembayaran gagal.');
                 btn.disabled = false;
                 btn.innerHTML = '💳 Bayar via QRIS / Virtual Account';
             },

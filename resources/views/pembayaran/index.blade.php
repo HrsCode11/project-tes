@@ -4,13 +4,6 @@
     <x-slot name="title">Pembayaran</x-slot>
     <x-slot name="subtitle">Riwayat semua transaksi pembayaran iuran</x-slot>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-5 flex items-center justify-between">
-        <span>✅ {{ session('success') }}</span>
-        <button onclick="this.parentElement.remove()" class="font-bold">✕</button>
-    </div>
-    @endif
-
     {{-- Header --}}
     <div class="flex items-center justify-between mb-5">
         <div></div>

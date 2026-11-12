@@ -59,7 +59,6 @@
             <tr>
                 <th>No</th>
                 <th>Nama Warga</th>
-                <th>NIK</th>
                 <th>No. RT</th>
                 <th>Nominal</th>
                 <th>Status</th>
@@ -70,7 +69,6 @@
             <tr>
                 <td>{{ $i + 1 }}</td>
                 <td>{{ $t->warga->nama_lengkap }}</td>
-                <td>{{ $t->warga->nik }}</td>
                 <td>{{ $t->warga->no_rt }}</td>
                 <td>Rp {{ number_format($t->nominal, 0, ',', '.') }}</td>
                 <td>

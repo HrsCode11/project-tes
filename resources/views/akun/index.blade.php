@@ -2,15 +2,6 @@
     <x-slot name="title">Kelola Akun</x-slot>
     <x-slot name="subtitle">Akun login, role, dan status akses pengguna</x-slot>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-5 flex items-center justify-between">
-        <span class="flex items-center gap-2">
-            <x-icon name="check-circle" class="w-4 h-4" /> {{ session('success') }}
-        </span>
-        <button onclick="this.parentElement.remove()" class="font-bold">✕</button>
-    </div>
-    @endif
-
     <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
 
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 flex-wrap gap-3">
@@ -108,8 +99,7 @@
 
                                 @if($bisaHapus)
                                 <form action="{{ route('ketua.akun.destroy', $a) }}" method="POST"
-                                    data-konfirmasi="Hapus akun {{ $nama }}? Data warganya tetap tersimpan, tetapi akun ini tidak bisa login lagi."
-                                    onsubmit="return confirm(this.dataset.konfirmasi)">
+                                    data-konfirmasi="Hapus akun {{ $nama }}? Data warganya tetap tersimpan, tetapi akun ini tidak bisa login lagi.">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"

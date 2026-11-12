@@ -3,14 +3,6 @@
     <x-slot name="title">Kelola Iuran</x-slot>
     <x-slot name="subtitle">Buat dan kelola iuran insidental RT/RW</x-slot>
 
-    {{-- Alert --}}
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-5 flex items-center justify-between">
-        <span>✅ {{ session('success') }}</span>
-        <button onclick="this.parentElement.remove()" class="font-bold">✕</button>
-    </div>
-    @endif
-
     {{-- Header --}}
     <div class="flex items-center justify-between mb-5">
         <div>
@@ -88,15 +80,22 @@
                     class="px-3 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-xs font-semibold text-gray-600 transition">
                     <x-icon name="pencil" class="w-3.5 h-3.5" />
                 </a>
+                @if($item->pembayaran_count === 0)
                 <form action="{{ route($prefix . '.iuran.destroy', $item) }}" method="POST"
-                    onsubmit="return confirm('Hapus iuran {{ $item->nama_iuran }}? Semua tagihan akan ikut terhapus.')">
+                    data-konfirmasi="Hapus iuran {{ $item->nama_iuran }}? Seluruh tagihannya, yang belum pernah dibayar, ikut terhapus.">
                     @csrf
                     @method('DELETE')
-                    <button type="submit"
+                    <button type="submit" title="Hapus iuran"
                         class="px-3 py-2 border border-gray-200 hover:bg-red-50 hover:text-red-500 rounded-lg text-xs font-semibold text-gray-600 transition">
                         <x-icon name="trash" class="w-3.5 h-3.5" />
                     </button>
                 </form>
+                @else
+                <span title="Sudah ada transaksi pembayaran, tidak dapat dihapus. Ubah statusnya menjadi ditutup."
+                    class="px-3 py-2 border border-gray-100 rounded-lg text-gray-300 cursor-not-allowed">
+                    <x-icon name="trash" class="w-3.5 h-3.5" />
+                </span>
+                @endif
             </div>
 
         </div>

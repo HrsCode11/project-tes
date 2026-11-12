@@ -17,13 +17,6 @@
                 @csrf
                 @method('PUT')
 
-                @if(session('error'))
-                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4 text-sm flex items-center gap-2">
-                    <x-icon name="exclamation-triangle" class="w-4 h-4 flex-shrink-0" />
-                    {{ session('error') }}
-                </div>
-                @endif
-
                 {{-- Warga (hanya tampil, tidak bisa diganti) --}}
                 <div class="mb-5 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold flex-shrink-0">

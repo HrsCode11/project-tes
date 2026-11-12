@@ -3,13 +3,6 @@
     <x-slot name="title">Kelola Pemasukan</x-slot>
     <x-slot name="subtitle">Rekap pemasukan kas RT/RW bulan ini</x-slot>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-5 flex items-center justify-between">
-        <span>✅ {{ session('success') }}</span>
-        <button onclick="this.parentElement.remove()" class="font-bold">✕</button>
-    </div>
-    @endif
-
     {{-- Stat Cards --}}
     <div class="grid grid-cols-3 gap-5 mb-6">
         <div class="bg-white rounded-xl border border-gray-200 p-5">
@@ -100,7 +93,7 @@
                         <a href="{{ route($prefix . '.pemasukan.edit', $item) }}"
                                 class="text-blue-500 hover:underline text-sm font-semibold">Edit</a>
                             <form action="{{ route($prefix . '.pemasukan.destroy', $item) }}" method="POST"
-                                onsubmit="return confirm('Yakin hapus pemasukan ini?')">
+                                data-konfirmasi="Yakin hapus pemasukan '{{ $item->keterangan }}' ini?">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"

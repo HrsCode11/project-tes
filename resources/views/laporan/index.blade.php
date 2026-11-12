@@ -2,16 +2,6 @@
     <x-slot name="title">Ekspor Laporan</x-slot>
     <x-slot name="subtitle">Generate dan unduh laporan keuangan RT/RW</x-slot>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-5 flex items-center justify-between">
-        <span class="flex items-center gap-2">
-            <x-icon name="check-circle" class="w-4 h-4" />
-            {{ session('success') }}
-        </span>
-        <button onclick="this.parentElement.remove()" class="font-bold">✕</button>
-    </div>
-    @endif
-
     <div class="grid grid-cols-2 gap-6">
 
         {{-- Form Ekspor --}}

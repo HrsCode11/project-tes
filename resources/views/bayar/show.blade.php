@@ -38,8 +38,6 @@
             </div>
         </div>
 
-        <div id="alert-box" class="hidden mb-4 px-4 py-3 rounded-xl text-sm"></div>
-
         @if($lunas)
             <div class="bg-green-50 border border-green-200 text-green-700 rounded-xl px-4 py-4 text-sm flex items-center gap-2">
                 <x-icon name="check-circle" class="w-5 h-5 flex-shrink-0" />
@@ -58,16 +56,52 @@
     </div>
 </div>
 
+{{-- MODAL ALERT --}}
+<div id="bayar-alert-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center">
+        <div id="bayar-alert-icon" class="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center"></div>
+        <h3 id="bayar-alert-title" class="text-lg font-bold text-gray-800 mb-2"></h3>
+        <p id="bayar-alert-message" class="text-sm text-gray-600 mb-6 leading-relaxed"></p>
+        <button type="button" id="bayar-alert-btn" onclick="tutupModalPesan()"
+            class="w-full font-semibold py-2.5 px-4 rounded-xl text-white text-sm transition">
+            Mengerti
+        </button>
+    </div>
+</div>
+
 @unless($lunas)
 <script>
     const checkoutUrl = {{ Js::from($checkoutUrl) }};
 
     function tampilkanPesan(tipe, pesan) {
-        const box = document.getElementById('alert-box');
-        box.className = 'mb-4 px-4 py-3 rounded-xl text-sm border ' + (tipe === 'error'
-            ? 'bg-red-50 border-red-200 text-red-700'
-            : 'bg-green-50 border-green-200 text-green-700');
-        box.textContent = pesan;
+        const modal = document.getElementById('bayar-alert-modal');
+        const icon  = document.getElementById('bayar-alert-icon');
+        const title = document.getElementById('bayar-alert-title');
+        const msg   = document.getElementById('bayar-alert-message');
+        const btn   = document.getElementById('bayar-alert-btn');
+
+        msg.textContent = pesan;
+
+        if (tipe === 'error') {
+            icon.className = 'w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center bg-red-100 text-red-600';
+            icon.innerHTML = `<svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>`;
+            title.textContent = 'Perhatian';
+            btn.className = 'w-full font-semibold py-2.5 px-4 rounded-xl text-white text-sm transition bg-red-500 hover:bg-red-600';
+        } else {
+            icon.className = 'w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center bg-green-100 text-green-600';
+            icon.innerHTML = `<svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>`;
+            title.textContent = 'Berhasil';
+            btn.className = 'w-full font-semibold py-2.5 px-4 rounded-xl text-white text-sm transition bg-green-500 hover:bg-green-600';
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function tutupModalPesan() {
+        const modal = document.getElementById('bayar-alert-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
     }
 
     function bayar() {

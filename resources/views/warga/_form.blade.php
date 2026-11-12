@@ -1,10 +1,3 @@
-@if(session('error'))
-<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4 text-sm flex items-center gap-2">
-    <x-icon name="exclamation-triangle" class="w-4 h-4 flex-shrink-0" />
-    {{ session('error') }}
-</div>
-@endif
-
 {{-- Nama --}}
 <div class="mb-4">
     <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>

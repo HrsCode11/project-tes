@@ -2,21 +2,6 @@
     <x-slot name="title">Kelola User</x-slot>
     <x-slot name="subtitle">Manajemen pengguna sistem RT/RW</x-slot>
 
-    {{-- Alert Success/Error --}}
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-5 flex items-center justify-between">
-        <span>✅ {{ session('success') }}</span>
-        <button onclick="this.parentElement.remove()" class="text-green-700 font-bold">✕</button>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-5 flex items-center justify-between">
-        <span>❌ {{ session('error') }}</span>
-        <button onclick="this.parentElement.remove()" class="text-red-700 font-bold">✕</button>
-    </div>
-    @endif
-
     {{-- Panel --}}
     <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
         
@@ -91,7 +76,7 @@
                                 </a>
                                 @if($user->id !== auth()->id())
                                 <form action="{{ route('ketua.users.destroy', $user) }}" method="POST" 
-                                    onsubmit="return confirm('Yakin hapus user ini?')">
+                                    data-konfirmasi="Yakin hapus user {{ $user->nama_lengkap }} ini?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-500 hover:text-red-700 font-semibold text-sm">

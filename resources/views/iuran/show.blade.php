@@ -1,8 +1,5 @@
 <x-app-layout>
     @php $prefix = auth()->user()->isKetuaRT() ? 'ketua' : 'bendahara'; @endphp
-    @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-5">{{ session('error') }}</div>
-    @endif
     <x-slot name="title">Detail Iuran</x-slot>
     <x-slot name="subtitle">{{ $iuran->nama_iuran }} · Rp {{ number_format($iuran->nominal, 0, ',', '.') }}</x-slot>
 
@@ -39,8 +36,13 @@
             </div>
             @if($iuran->status === 'aktif')
             <a href="{{ route($prefix . '.iuran.pengingat', $iuran) }}"
-                class="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition inline-flex items-center gap-2">
-                <x-icon name="receipt" class="w-4 h-4" /> Kirim Pengingat WA
+            class="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition inline-flex items-center gap-2">
+
+                <img src="{{ asset('icons/whatsapp.svg') }}"
+                    alt="WhatsApp"
+                    class="w-4 h-4">
+
+                <span>Kirim Pengingat WA</span>
             </a>
             @endif
             <a href="{{ route($prefix . '.iuran.index') }}"

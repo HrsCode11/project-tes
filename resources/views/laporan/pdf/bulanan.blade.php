@@ -52,29 +52,31 @@
 
     <!-- Pemasukan dari Iuran -->
     @if($pembayaran->count() > 0)
+    @php
+        $rekapIuran = $pembayaran->groupBy(fn($p) => $p->tagihan->iuran_id);
+    @endphp
     <div class="section-title">Pemasukan dari Iuran</div>
     <table>
         <thead>
             <tr>
-                <th>Tanggal</th>
-                <th>Nama Warga</th>
                 <th>Nama Iuran</th>
-                <th>Metode</th>
-                <th class="text-right">Nominal</th>
+                <th>Jumlah Pembayar</th>
+                <th class="text-right">Nominal / Warga</th>
+                <th class="text-right">Total Terkumpul</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($pembayaran as $p)
+            @foreach($rekapIuran as $grup)
+            @php $itemPertama = $grup->first(); @endphp
             <tr>
-                <td>{{ $p->tgl_bayar->format('d/m/Y') }}</td>
-                <td>{{ $p->warga->nama_lengkap }}</td>
-                <td>{{ $p->tagihan->iuran->nama_iuran }}</td>
-                <td>{{ strtoupper($p->metode) }}</td>
-                <td class="text-right">Rp {{ number_format($p->nominal, 0, ',', '.') }}</td>
+                <td>{{ $itemPertama->tagihan->iuran->nama_iuran }}</td>
+                <td>{{ $grup->count() }} warga</td>
+                <td class="text-right">Rp {{ number_format($itemPertama->nominal, 0, ',', '.') }}</td>
+                <td class="text-right">Rp {{ number_format($grup->sum('nominal'), 0, ',', '.') }}</td>
             </tr>
             @endforeach
             <tr>
-                <td colspan="4" style="font-weight:bold;text-align:right">Total</td>
+                <td colspan="3" style="font-weight:bold;text-align:right">Total ({{ $pembayaran->count() }} transaksi)</td>
                 <td class="text-right" style="font-weight:bold;color:#10B981">
                     Rp {{ number_format($totalPemasukanIuran, 0, ',', '.') }}
                 </td>

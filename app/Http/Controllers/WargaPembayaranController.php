@@ -43,7 +43,7 @@ class WargaPembayaranController extends Controller
         return view('warga.pembayaran', compact('tagihanBelumLunas', 'riwayatBayar'));
     }
 
-    public function checkout(Tagihan $tagihan)
+    public function checkout(Request $request, Tagihan $tagihan)
     {
         $warga = $this->wargaLogin();
 
@@ -60,6 +60,10 @@ class WargaPembayaranController extends Controller
             return response()->json(['error' => 'Iuran ini sudah ditutup.'], 400);
         }
 
+        $metode = in_array($request->input('metode'), ['qris', 'va'], true)
+            ? $request->input('metode')
+            : 'qris';
+
         try {
             // Batalkan pembayaran pending lama (jangan dihapus agar jika warga
             // terlanjur membayar ke nomor VA lama, webhook tetap mengenali order_id-nya)
@@ -70,13 +74,13 @@ class WargaPembayaranController extends Controller
                     'catatan' => 'Digantikan transaksi baru',
                 ]);
 
-            $result = (new MidtransService())->createTransaction($tagihan);
+            $result = (new MidtransService())->createTransaction($tagihan, $metode);
 
             Pembayaran::create([
                 'tagihan_id' => $tagihan->id,
                 'warga_id'   => $tagihan->warga_id,
                 'order_id'   => $result['order_id'],
-                'metode'     => 'qris',
+                'metode'     => $metode,
                 'nominal'    => $tagihan->nominal,
                 'status'     => 'pending',
             ]);

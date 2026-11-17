@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pembayaran;
 use App\Models\Tagihan;
 use App\Services\MidtransService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 
@@ -35,7 +36,7 @@ class BayarCepatController extends Controller
         return view('bayar.show', ['tagihan' => $tagihan, 'checkoutUrl' => $checkoutUrl, 'lunas' => false]);
     }
 
-    public function checkout(Tagihan $tagihan)
+    public function checkout(Request $request, Tagihan $tagihan)
     {
         if (!$tagihan->warga->isAktif()) {
             return response()->json(['error' => 'Data warga ini sudah tidak aktif.'], 403);
@@ -49,6 +50,10 @@ class BayarCepatController extends Controller
             return response()->json(['error' => 'Iuran ini sudah ditutup.'], 410);
         }
 
+        $metode = in_array($request->input('metode'), ['qris', 'va'], true)
+            ? $request->input('metode')
+            : 'qris';
+
         try {
             // Batalkan pembayaran pending lama tanpa menghapus barisnya agar
             // jika warga membayar ke nomor VA lama, order_id tetap dikenali webhook
@@ -59,13 +64,13 @@ class BayarCepatController extends Controller
                     'catatan' => 'Digantikan transaksi baru',
                 ]);
 
-            $result = (new MidtransService())->createTransaction($tagihan);
+            $result = (new MidtransService())->createTransaction($tagihan, $metode);
 
             Pembayaran::create([
                 'tagihan_id' => $tagihan->id,
                 'warga_id'   => $tagihan->warga_id,
                 'order_id'   => $result['order_id'],
-                'metode'     => 'qris',
+                'metode'     => $metode,
                 'nominal'    => $tagihan->nominal,
                 'status'     => 'pending',
             ]);

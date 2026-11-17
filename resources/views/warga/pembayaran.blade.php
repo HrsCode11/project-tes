@@ -37,28 +37,41 @@
                 </div>
             </div>
 
-            {{-- Tombol Bayar --}}
-            @if($t->status === 'belum_bayar')
-            <div class="mt-3">
-                <button
-                    onclick="bayar({{ $t->id }})"
-                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg text-sm transition flex items-center gap-2">
-                    💳 Bayar via QRIS / Virtual Account
+            {{-- Pilihan Metode Bayar + Rincian Biaya Admin --}}
+            @php
+                $nominalIuran = (int) $t->nominal;
+                $adminQris    = \App\Services\MidtransService::hitungBiayaAdmin($nominalIuran, 'qris');
+                $adminVa      = \App\Services\MidtransService::hitungBiayaAdmin($nominalIuran, 'va');
+            @endphp
+            @if(in_array($t->status, ['belum_bayar', 'menunggu']))
+            <div class="mt-3 max-w-xs space-y-2">
+                <button type="button"
+                    onclick="bayar({{ $t->id }}, 'qris', this)"
+                    class="w-full flex items-center justify-between border border-purple-200 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg px-3.5 py-2 text-xs transition">
+                    <span class="font-semibold inline-flex items-center gap-1.5">
+                        <x-icon name="qr-code" class="w-4 h-4 flex-shrink-0" />
+                        <span>Bayar via QRIS <span class="text-purple-500 font-normal">(+Rp {{ number_format($adminQris, 0, ',', '.') }})</span></span>
+                    </span>
+                    <span class="font-mono font-bold">Rp {{ number_format($nominalIuran + $adminQris, 0, ',', '.') }}</span>
                 </button>
-            </div>
-            @elseif($t->status === 'menunggu')
-            <div class="mt-3">
-                <button
-                    onclick="bayar({{ $t->id }})"
-                    class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-2 rounded-lg text-sm transition flex items-center gap-2">
-                    🔄 Lanjutkan Pembayaran
+
+                <button type="button"
+                    onclick="bayar({{ $t->id }}, 'va', this)"
+                    class="w-full flex items-center justify-between border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg px-3.5 py-2 text-xs transition">
+                    <span class="font-semibold inline-flex items-center gap-1.5">
+                        <x-icon name="credit-card" class="w-4 h-4 flex-shrink-0" />
+                        <span>Virtual Account <span class="text-blue-500 font-normal">(+Rp {{ number_format($adminVa, 0, ',', '.') }})</span></span>
+                    </span>
+                    <span class="font-mono font-bold">Rp {{ number_format($nominalIuran + $adminVa, 0, ',', '.') }}</span>
                 </button>
             </div>
             @endif
         </div>
         @empty
         <div class="px-5 py-10 text-center">
-            <div class="text-4xl mb-3">🎉</div>
+            <div class="flex justify-center mb-3">
+                <x-icon name="check-circle" class="w-10 h-10 text-green-400" />
+            </div>
             <div class="font-bold text-gray-700">Semua tagihan sudah lunas!</div>
             <div class="text-gray-400 text-sm mt-1">Tidak ada tagihan yang perlu dibayar saat ini</div>
         </div>
@@ -143,58 +156,52 @@
 
     {{-- JavaScript untuk Midtrans Snap --}}
     <script>
-        function bayar(tagihanId) {
-    const btn = event.target;
-    btn.disabled = true;
-    btn.innerHTML = '⏳ Memproses...';
+        function bayar(tagihanId, metode, btn) {
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<div class="text-xs font-semibold text-gray-600 py-0.5">Memproses transaksi...</div>';
 
-    fetch(`/warga/pembayaran/${tagihanId}/checkout`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-        },
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.error) {
-            showModalAlert('error', data.error);
-            btn.disabled = false;
-            btn.innerHTML = '💳 Bayar via QRIS / Virtual Account';
-            return;
-        }
+            fetch(`/warga/pembayaran/${tagihanId}/checkout`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({ metode: metode }),
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    showModalAlert('error', data.error);
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                    return;
+                }
 
-        snap.pay(data.snap_token, {
-            onSuccess: function(result) {
-                showModalAlert('success', 'Pembayaran berhasil!', () => location.reload());
-            },
-            onPending: function(result) {
-                showModalAlert('warning', 'Menunggu pembayaran kamu.', () => location.reload());
-            },
-            onError: function(result) {
-                showModalAlert('error', 'Pembayaran gagal.');
+                snap.pay(data.snap_token, {
+                    onSuccess: function(result) {
+                        showModalAlert('success', 'Pembayaran berhasil!', () => location.reload());
+                    },
+                    onPending: function(result) {
+                        showModalAlert('warning', 'Menunggu pembayaran kamu.', () => location.reload());
+                    },
+                    onError: function(result) {
+                        showModalAlert('error', 'Pembayaran gagal.');
+                        btn.disabled = false;
+                        btn.innerHTML = originalHtml;
+                    },
+                    onClose: function() {
+                        btn.disabled = false;
+                        btn.innerHTML = originalHtml;
+                    }
+                });
+            })
+            .catch(() => {
+                showModalAlert('error', 'Gagal terhubung ke server. Silakan coba lagi.');
                 btn.disabled = false;
-                btn.innerHTML = '💳 Bayar via QRIS / Virtual Account';
-            },
-            onClose: function() {
-                btn.disabled = false;
-                btn.innerHTML = '💳 Bayar via QRIS / Virtual Account';
-            }
-        });
-    });
-}
-
-        function showAlert(type, message) {
-            const colors = {
-                success: 'bg-green-100 border-green-400 text-green-700',
-                error:   'bg-red-100 border-red-400 text-red-700',
-                warning: 'bg-orange-100 border-orange-400 text-orange-700',
-            };
-            const box = document.getElementById('alert-box');
-            box.className = `border px-4 py-3 rounded-xl mb-5 ${colors[type]}`;
-            box.innerHTML = message;
-            box.classList.remove('hidden');
-            box.scrollIntoView({ behavior: 'smooth' });
+                btn.innerHTML = originalHtml;
+            });
         }
     </script>
 

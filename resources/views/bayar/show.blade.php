@@ -23,33 +23,79 @@
         </div>
     </div>
 
-    <div class="p-6">
-        <p class="text-gray-500 text-sm">Halo,</p>
-        <p class="font-bold text-gray-800 text-lg mb-5">{{ $tagihan->warga->nama_lengkap }}</p>
+    <div class="p-5">
+        <p class="text-gray-500 text-xs">Halo,</p>
+        <p class="font-bold text-gray-800 text-base mb-3">{{ $tagihan->warga->nama_lengkap }}</p>
 
-        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-5">
-            <div class="text-gray-400 text-xs mb-1">Tagihan</div>
-            <div class="font-semibold text-gray-800">{{ $tagihan->iuran->nama_iuran }}</div>
-            <div class="font-bold font-mono text-2xl text-blue-500 my-2">
-                Rp {{ number_format($tagihan->nominal, 0, ',', '.') }}
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-3.5 mb-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-gray-400 text-[11px]">Tagihan</div>
+                    <div class="font-semibold text-sm text-gray-800">{{ $tagihan->iuran->nama_iuran }}</div>
+                </div>
+                <div class="text-right">
+                    <div class="font-bold font-mono text-lg text-blue-500">
+                        Rp {{ number_format($tagihan->nominal, 0, ',', '.') }}
+                    </div>
+                </div>
             </div>
-            <div class="text-gray-400 text-xs">
+            <div class="text-gray-400 text-[11px] mt-1">
                 Batas bayar: {{ $tagihan->iuran->deadline->translatedFormat('d F Y') }}
             </div>
         </div>
 
         @if($lunas)
-            <div class="bg-green-50 border border-green-200 text-green-700 rounded-xl px-4 py-4 text-sm flex items-center gap-2">
+            <div class="bg-green-50 border border-green-200 text-green-700 rounded-xl px-4 py-3 text-sm flex items-center gap-2">
                 <x-icon name="check-circle" class="w-5 h-5 flex-shrink-0" />
                 Tagihan ini sudah lunas. Terima kasih!
             </div>
         @else
+            @php
+                $nominalIuran = (int) $tagihan->nominal;
+                $adminQris    = \App\Services\MidtransService::hitungBiayaAdmin($nominalIuran, 'qris');
+                $adminVa      = \App\Services\MidtransService::hitungBiayaAdmin($nominalIuran, 'va');
+            @endphp
+
+            <div class="space-y-2 mb-4">
+                <label class="block cursor-pointer">
+                    <input type="radio" name="metode" value="qris" class="sr-only peer" checked>
+                    <div class="border border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-50/60 rounded-xl px-3.5 py-2.5 transition flex items-center justify-between">
+                        <div>
+                            <div class="font-semibold text-xs text-gray-800 inline-flex items-center gap-1.5">
+                                <x-icon name="qr-code" class="w-4 h-4 text-gray-500" />
+                                <span>QRIS / GoPay</span>
+                            </div>
+                            <div class="text-[11px] text-gray-500">+Admin 0,7% (Rp {{ number_format($adminQris, 0, ',', '.') }})</div>
+                        </div>
+                        <div class="font-mono font-bold text-xs text-blue-600">
+                            Rp {{ number_format($nominalIuran + $adminQris, 0, ',', '.') }}
+                        </div>
+                    </div>
+                </label>
+
+                <label class="block cursor-pointer">
+                    <input type="radio" name="metode" value="va" class="sr-only peer">
+                    <div class="border border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-50/60 rounded-xl px-3.5 py-2.5 transition flex items-center justify-between">
+                        <div>
+                            <div class="font-semibold text-xs text-gray-800 inline-flex items-center gap-1.5">
+                                <x-icon name="credit-card" class="w-4 h-4 text-gray-500" />
+                                <span>Virtual Account</span>
+                            </div>
+                            <div class="text-[11px] text-gray-500">+Admin Rp {{ number_format($adminVa, 0, ',', '.') }}</div>
+                        </div>
+                        <div class="font-mono font-bold text-xs text-blue-600">
+                            Rp {{ number_format($nominalIuran + $adminVa, 0, ',', '.') }}
+                        </div>
+                    </div>
+                </label>
+            </div>
+
             <button id="btn-bayar" onclick="bayar()"
-                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-xl transition flex items-center justify-center gap-2">
-                <x-icon name="credit-card" class="w-5 h-5" />
-                Bayar via QRIS / Virtual Account
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2.5 rounded-xl text-sm transition flex items-center justify-center gap-2">
+                <x-icon name="credit-card" class="w-4 h-4" />
+                Bayar Sekarang
             </button>
-            <p class="text-gray-400 text-xs text-center mt-3">
+            <p class="text-gray-400 text-[11px] text-center mt-2.5">
                 Link ini khusus untuk tagihan di atas dan tidak memerlukan login.
             </p>
         @endif
@@ -105,15 +151,18 @@
     }
 
     function bayar() {
-        const btn = document.getElementById('btn-bayar');
+        const btn    = document.getElementById('btn-bayar');
+        const metode = document.querySelector('input[name="metode"]:checked')?.value || 'qris';
         btn.disabled = true;
 
         fetch(checkoutUrl, {
             method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
             },
+            body: JSON.stringify({ metode: metode }),
         })
         .then(async res => {
             const data = await res.json().catch(() => ({}));

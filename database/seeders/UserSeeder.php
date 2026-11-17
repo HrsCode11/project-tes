@@ -13,11 +13,7 @@ class UserSeeder extends Seeder
     {
         $data = [
             ['nama' => 'Haris Cahyana', 'nik' => '3502010101900001', 'hp' => '081200000001',
-             'email' => 'ketua@rtrw.com',     'role' => 'ketua_rt'],
-            ['nama' => 'Siti Aminah',   'nik' => '3502010201900002', 'hp' => '081200000002',
-             'email' => 'bendahara@rtrw.com', 'role' => 'bendahara'],
-            ['nama' => 'Budi Santoso',  'nik' => '3502010301900003', 'hp' => '081200000003',
-             'email' => 'warga@rtrw.com',     'role' => 'warga'],
+             'email' => 'hariscahya35@gmail.com',     'role' => 'ketua_rt'],
         ];
 
         foreach ($data as $d) {
@@ -37,7 +33,7 @@ class UserSeeder extends Seeder
                 ['email' => $d['email']],
                 [
                     'warga_id' => $warga->id,
-                    'password' => Hash::make('password123'),
+                    'password' => Hash::make('password123#'),
                     'role'     => $d['role'],
                     'status'   => 'aktif',
                 ]

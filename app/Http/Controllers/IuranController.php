@@ -8,6 +8,7 @@ use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Database\QueryException;
 
 class IuranController extends Controller
 {
@@ -24,6 +25,7 @@ class IuranController extends Controller
             ->update(['status' => 'ditutup']);
 
         $iuran = Iuran::with('tagihan')
+            ->withCount('pembayaran')
             ->orderBy('created_at', 'desc')
             ->paginate(9);
 
@@ -108,12 +110,23 @@ class IuranController extends Controller
 
     public function destroy(Iuran $iuran)
     {
-        $nama = $iuran->nama_iuran;
-        $iuran->delete();
-
         $prefix = $this->redirectByRole();
 
+        if ($alasan = $iuran->alasanTidakBisaDihapus()) {
+            return redirect()->route("{$prefix}.iuran.index")->with('error', $alasan);
+        }
+
+        $nama = $iuran->nama_iuran;
+
+        try {
+            $iuran->delete();
+        } catch (QueryException $e) {
+            // Jaring pengaman jika database menolak
+            return redirect()->route("{$prefix}.iuran.index")
+                ->with('error', 'Iuran tidak dapat dihapus karena masih terkait data lain.');
+        }
+
         return redirect()->route("{$prefix}.iuran.index")
-            ->with('success', "Iuran '{$nama}' berhasil dihapus beserta semua tagihannya.");
+            ->with('success', "Iuran '{$nama}' berhasil dihapus beserta tagihannya yang belum pernah dibayar.");
     }
 }

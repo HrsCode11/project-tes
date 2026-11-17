@@ -44,7 +44,7 @@ class MidtransService
                 ],
             ],
             'enabled_payments' => [
-                'bca_va', 'bni_va', 'bri_va', 'permata_va', 'other_va', 'gopay',
+                'bca_va', 'bni_va', 'bri_va', 'permata_va', 'other_va', 'gopay', 'other_qris',
             ],
         ];
 

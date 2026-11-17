@@ -50,10 +50,14 @@ class BayarCepatController extends Controller
         }
 
         try {
-            // Sama seperti checkout di halaman warga yang sudah login
+            // Batalkan pembayaran pending lama tanpa menghapus barisnya agar
+            // jika warga membayar ke nomor VA lama, order_id tetap dikenali webhook
             Pembayaran::where('tagihan_id', $tagihan->id)
                 ->where('status', 'pending')
-                ->delete();
+                ->update([
+                    'status'  => 'gagal',
+                    'catatan' => 'Digantikan transaksi baru',
+                ]);
 
             $result = (new MidtransService())->createTransaction($tagihan);
 

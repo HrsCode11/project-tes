@@ -59,6 +59,15 @@ class LaporanController extends Controller
         return $this->exportExcel($jenis, $data, $namaFile);
     }
 
+    private function hitungSaldoKas(): float
+    {
+        $totalMasukIuran    = Pembayaran::where('status', 'lunas')->sum('nominal');
+        $totalMasukNonIuran = Pemasukan::sum('jumlah');
+        $totalKeluar        = Pengeluaran::sum('jumlah');
+
+        return ($totalMasukIuran + $totalMasukNonIuran) - $totalKeluar;
+    }
+
     private function getData(string $jenis, ?int $tahun, ?int $bulan, ?int $iuranId): array
     {
         if ($jenis === 'bulanan') {
@@ -80,9 +89,10 @@ class LaporanController extends Controller
             $totalPemasukanNonIuran = $pemasukan->sum('jumlah');
             $totalPengeluaran       = $pengeluaran->sum('jumlah');
             $totalPemasukan         = $totalPemasukanIuran + $totalPemasukanNonIuran;
-            $saldoAkhir             = $totalPemasukan - $totalPengeluaran;
+            $saldoAkhir             = $this->hitungSaldoKas();
 
             return compact(
+                'bulan', 'tahun',
                 'pembayaran', 'pemasukan', 'pengeluaran',
                 'totalPemasukanIuran', 'totalPemasukanNonIuran',
                 'totalPemasukan', 'totalPengeluaran', 'saldoAkhir'
@@ -119,7 +129,7 @@ class LaporanController extends Controller
 
             $totalPemasukan   = collect($dataBulanan)->sum('total_pemasukan');
             $totalPengeluaran = collect($dataBulanan)->sum('pengeluaran');
-            $saldoAkhir       = $totalPemasukan - $totalPengeluaran;
+            $saldoAkhir       = $this->hitungSaldoKas();
 
             return compact('dataBulanan', 'totalPemasukan', 'totalPengeluaran', 'saldoAkhir');
         }

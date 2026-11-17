@@ -4,24 +4,6 @@
 
     @php $prefix = auth()->user()->isKetuaRT() ? 'ketua' : 'bendahara'; @endphp
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-5 flex items-center justify-between">
-        <span class="flex items-center gap-2">
-            <x-icon name="check-circle" class="w-4 h-4" /> {{ session('success') }}
-        </span>
-        <button onclick="this.parentElement.remove()" class="font-bold">✕</button>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-5 flex items-center justify-between">
-        <span class="flex items-center gap-2">
-            <x-icon name="exclamation-triangle" class="w-4 h-4" /> {{ session('error') }}
-        </span>
-        <button onclick="this.parentElement.remove()" class="font-bold">✕</button>
-    </div>
-    @endif
-
     {{-- Ringkasan --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
         <div class="bg-white rounded-xl border border-gray-200 p-5">
@@ -140,8 +122,7 @@
 
                                 @if($bisaHapus)
                                 <form action="{{ route($prefix . '.warga.destroy', $w) }}" method="POST"
-                                    data-konfirmasi="Hapus data {{ $w->nama_lengkap }}? Tindakan ini tidak bisa dibatalkan."
-                                    onsubmit="return confirm(this.dataset.konfirmasi)">
+                                    data-konfirmasi="Hapus data {{ $w->nama_lengkap }}? Tindakan ini tidak bisa dibatalkan.">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"

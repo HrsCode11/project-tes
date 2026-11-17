@@ -61,10 +61,14 @@ class WargaPembayaranController extends Controller
         }
 
         try {
-            // Hapus pembayaran pending lama agar tidak konflik dengan transaksi baru
+            // Batalkan pembayaran pending lama (jangan dihapus agar jika warga
+            // terlanjur membayar ke nomor VA lama, webhook tetap mengenali order_id-nya)
             Pembayaran::where('tagihan_id', $tagihan->id)
                 ->where('status', 'pending')
-                ->delete();
+                ->update([
+                    'status'  => 'gagal',
+                    'catatan' => 'Digantikan transaksi baru',
+                ]);
 
             $result = (new MidtransService())->createTransaction($tagihan);
 
@@ -130,18 +134,34 @@ class WargaPembayaranController extends Controller
                 default                                     => 'qris',
             };
 
-            DB::transaction(function () use ($pembayaran, $status, $metode, $notification) {
+            DB::transaction(function () use ($pembayaran, $status, $metode, $notification, $orderId) {
+                $tagihan = $pembayaran->tagihan;
+                $sudahLunasSebelumnya = $tagihan->status === 'lunas' && $pembayaran->status !== 'lunas';
 
                 $pembayaran->update([
                     'status'            => $status,
                     'metode'            => $metode,
-                    'tgl_bayar'         => now(),
-                    'midtrans_response' => (array) $notification,
+                    'tgl_bayar'         => $status === 'lunas' ? ($pembayaran->tgl_bayar ?? now()) : $pembayaran->tgl_bayar,
+                    'midtrans_response' => json_decode(json_encode($notification->getResponse()), true),
+                    'catatan'           => $sudahLunasSebelumnya && $status === 'lunas'
+                        ? 'Pembayaran ganda (tagihan sudah lunas sebelumnya)'
+                        : $pembayaran->catatan,
                 ]);
 
-                $tagihan = $pembayaran->tagihan;
-
                 if ($status === 'lunas') {
+                    if ($sudahLunasSebelumnya) {
+                        Log::warning("Pembayaran ganda terdeteksi untuk tagihan #{$tagihan->id}, order_id: {$orderId}");
+                    }
+
+                    // Batalkan transaksi pending lain pada tagihan yang sama
+                    Pembayaran::where('tagihan_id', $tagihan->id)
+                        ->where('id', '!=', $pembayaran->id)
+                        ->where('status', 'pending')
+                        ->update([
+                            'status'  => 'gagal',
+                            'catatan' => 'Tagihan telah lunas melalui transaksi lain',
+                        ]);
+
                     $tagihan->update(['status' => 'lunas']);
 
                     $iuran = $tagihan->iuran;
@@ -153,8 +173,14 @@ class WargaPembayaranController extends Controller
                         $iuran->update(['status' => 'selesai']);
                     }
 
-                } elseif ($status === 'gagal') {
-                    $tagihan->update(['status' => 'belum_bayar']);
+                } elseif ($status === 'gagal' && $tagihan->status !== 'lunas') {
+                    $masihAdaPending = $tagihan->pembayaran()
+                        ->where('status', 'pending')
+                        ->exists();
+
+                    if (!$masihAdaPending) {
+                        $tagihan->update(['status' => 'belum_bayar']);
+                    }
                 }
             });
 

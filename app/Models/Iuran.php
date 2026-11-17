@@ -32,6 +32,23 @@ class Iuran extends Model
         return $this->hasMany(Tagihan::class);
     }
 
+    // Semua pembayaran dari seluruh tagihan pada iuran ini
+    public function pembayaran()
+    {
+        return $this->hasManyThrough(Pembayaran::class, Tagihan::class);
+    }
+
+    // Mengembalikan alasan kalau tidak boleh dihapus, null kalau boleh
+    public function alasanTidakBisaDihapus(): ?string
+    {
+        if ($this->pembayaran()->exists()) {
+            return 'Iuran ini sudah memiliki catatan pembayaran sehingga tidak dapat dihapus. '
+                . 'Ubah statusnya menjadi ditutup agar riwayat keuangan tetap utuh.';
+        }
+
+        return null;
+    }
+
     // belongsTo = iuran ini milik 1 user (pembuatnya)
     public function pembuat()
     {

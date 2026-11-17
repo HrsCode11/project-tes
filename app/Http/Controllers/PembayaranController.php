@@ -63,6 +63,13 @@ class PembayaranController extends Controller
         }
 
         DB::transaction(function () use ($tagihan, $request) {
+            // Batalkan transaksi digital pending jika warga memilih bayar tunai
+            Pembayaran::where('tagihan_id', $tagihan->id)
+                ->where('status', 'pending')
+                ->update([
+                    'status'  => 'gagal',
+                    'catatan' => 'Warga membayar secara tunai',
+                ]);
 
             Pembayaran::create([
                 'tagihan_id' => $tagihan->id,

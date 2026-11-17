@@ -26,6 +26,8 @@ class DashboardController extends Controller
 
         abort_if(!$warga, 403, 'Akun kamu belum terhubung ke data warga. Hubungi pengurus RT.');
 
+        \App\Services\MidtransService::syncAllPending();
+
         $tagihanBelumLunas = Tagihan::with('iuran')
             ->where('warga_id', $warga->id)
             ->where('status', 'belum_bayar')
@@ -63,6 +65,8 @@ class DashboardController extends Controller
     // Data dashboard untuk Ketua RT dan Bendahara
     private function dataKeuangan(): array
     {
+        \App\Services\MidtransService::syncAllPending();
+
         // ── Saldo kas: seluruh pemasukan dikurangi seluruh pengeluaran ──
         $totalMasukIuran    = Pembayaran::where('status', 'lunas')->sum('nominal');
         $totalMasukNonIuran = Pemasukan::sum('jumlah');

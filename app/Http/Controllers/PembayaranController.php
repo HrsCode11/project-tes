@@ -17,6 +17,8 @@ class PembayaranController extends Controller
 
     public function index()
     {
+        \App\Services\MidtransService::syncAllPending();
+
         $pembayaran = Pembayaran::with(['tagihan.iuran', 'warga'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);

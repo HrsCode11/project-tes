@@ -117,11 +117,9 @@
         </div>
         <div class="font-bold text-gray-700 text-lg mb-2">Belum ada iuran</div>
         <p class="text-gray-400 text-sm mb-5">Buat iuran pertama untuk mulai generate tagihan warga</p>
-        <a href="{{ route('bendahara.iuran.create') }}"
-            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg text-sm transition inline-block">
-            <div class="flex justify-center mb-4">
-                <x-icon name="plus" class="w-14 h-14 text-gray-300" />
-            </div>
+        <a href="{{ route($prefix . '.iuran.create') }}"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition inline-flex items-center gap-2">
+            ＋ Buat Iuran Baru
         </a>
     </div>
     @endif

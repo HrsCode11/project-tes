@@ -66,7 +66,7 @@
                         class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg transition">
                         Update Iuran
                     </button>
-                    <a href="{{ route('bendahara.iuran.index') }}"
+                    <a href="{{ route($prefix . '.iuran.index') }}"
                         class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2 rounded-lg transition">
                         Batal
                     </a>

@@ -1,4 +1,5 @@
 <x-app-layout>
+    @php $prefix = auth()->user()->isKetuaRT() ? 'ketua' : 'bendahara'; @endphp
     <x-slot name="title">Edit Pemasukan</x-slot>
     <x-slot name="subtitle">Ubah data pemasukan</x-slot>
 
@@ -7,7 +8,7 @@
             <div class="px-6 py-4 border-b border-gray-100">
                 <div class="font-bold text-gray-800">Form Edit Pemasukan</div>
             </div>
-            <form action="{{ route('bendahara.pemasukan.update', $pemasukan) }}" method="POST" class="p-6">
+            <form action="{{ route($prefix . '.pemasukan.update', $pemasukan) }}" method="POST" class="p-6">
                 @csrf
                 @method('PUT')
 
@@ -61,7 +62,7 @@
                         class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg transition">
                         Update Pemasukan
                     </button>
-                    <a href="{{ route('bendahara.pemasukan.index') }}"
+                    <a href="{{ route($prefix . '.pemasukan.index') }}"
                         class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2 rounded-lg transition">
                         Batal
                     </a>

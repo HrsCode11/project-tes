@@ -15,7 +15,6 @@
     </div>
 
     {{-- Grid Kartu Iuran --}}
-    @if($iuran->count() > 0)
     <div class="grid grid-cols-3 gap-5 mb-5">
         @foreach($iuran as $item)
         @php
@@ -103,26 +102,10 @@
 
         {{-- Kartu Tambah Baru --}}
         <a href="{{ route($prefix . '.iuran.create') }}"
-            class="border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2 py-10 hover:border-blue-300 hover:bg-blue-50 transition cursor-pointer">
+            class="border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2 py-10 min-h-[220px] hover:border-blue-300 hover:bg-blue-50 transition cursor-pointer">
             <x-icon name="plus" class="w-4 h-4" /> Buat Iuran Baru
         </a>
     </div>
-    @else
-    {{-- Empty State --}}
-    <div class="bg-white rounded-xl border border-gray-200 py-16 text-center">
-        <div class="text-5xl mb-4">
-        <div class="flex justify-center mb-4">
-            <x-icon name="receipt" class="w-14 h-14 text-gray-300" />
-        </div>
-        </div>
-        <div class="font-bold text-gray-700 text-lg mb-2">Belum ada iuran</div>
-        <p class="text-gray-400 text-sm mb-5">Buat iuran pertama untuk mulai generate tagihan warga</p>
-        <a href="{{ route($prefix . '.iuran.create') }}"
-            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition inline-flex items-center gap-2">
-            ＋ Buat Iuran Baru
-        </a>
-    </div>
-    @endif
 
     {{-- Pagination --}}
     @if($iuran->hasPages())

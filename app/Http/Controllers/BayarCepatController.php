@@ -17,9 +17,6 @@ class BayarCepatController extends Controller
 
         abort_if(!$tagihan->warga->isAktif(), 403, 'Data warga ini sudah tidak aktif.');
 
-        MidtransService::syncAllPending();
-        $tagihan->refresh();
-
         // Sudah lunas: tampilkan info saja
         if ($tagihan->status === 'lunas') {
             return view('bayar.show', ['tagihan' => $tagihan, 'checkoutUrl' => null, 'lunas' => true]);

@@ -28,8 +28,6 @@ class WargaPembayaranController extends Controller
     {
         $warga = $this->wargaLogin();
 
-        MidtransService::syncAllPending();
-
         $tagihanBelumLunas = Tagihan::with('iuran')
             ->where('warga_id', $warga->id)
             ->whereIn('status', ['belum_bayar', 'menunggu'])
@@ -67,22 +65,6 @@ class WargaPembayaranController extends Controller
             : 'qris';
 
         try {
-            $midtrans = new MidtransService();
-
-            // Cek dulu apakah transaksi pending sebelumnya sebenarnya sudah dibayar di Midtrans
-            $pendingLama = Pembayaran::where('tagihan_id', $tagihan->id)
-                ->where('status', 'pending')
-                ->whereNotNull('order_id')
-                ->get();
-
-            foreach ($pendingLama as $pLama) {
-                $midtrans->syncTransactionStatus($pLama);
-            }
-
-            if ($tagihan->fresh()->status === 'lunas') {
-                return response()->json(['error' => 'Tagihan ini sudah lunas. Silakan muat ulang halaman.'], 400);
-            }
-
             // Batalkan pembayaran pending lama (jangan dihapus agar jika warga
             // terlanjur membayar ke nomor VA lama, webhook tetap mengenali order_id-nya)
             Pembayaran::where('tagihan_id', $tagihan->id)
@@ -92,7 +74,7 @@ class WargaPembayaranController extends Controller
                     'catatan' => 'Digantikan transaksi baru',
                 ]);
 
-            $result = $midtrans->createTransaction($tagihan, $metode);
+            $result = (new MidtransService())->createTransaction($tagihan, $metode);
 
             Pembayaran::create([
                 'tagihan_id' => $tagihan->id,

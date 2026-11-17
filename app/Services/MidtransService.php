@@ -10,10 +10,12 @@ class MidtransService
 {
     public function __construct()
     {
-        Config::$serverKey    = config('midtrans.server_key');
-        Config::$isProduction = config('midtrans.is_production');
-        Config::$isSanitized  = config('midtrans.is_sanitized');
-        Config::$is3ds        = config('midtrans.is_3ds');
+        Config::$serverKey        = config('midtrans.server_key');
+        Config::$isProduction     = config('midtrans.is_production');
+        Config::$isSanitized      = config('midtrans.is_sanitized');
+        Config::$is3ds            = config('midtrans.is_3ds');
+        Config::$curlOptions      = [CURLOPT_HTTPHEADER => []];
+        Config::$overrideNotifUrl = rtrim(config('app.url'), '/') . '/midtrans/webhook';
     }
 
     public static function hitungBiayaAdmin(float|int $nominal, string $metode = 'qris'): int

@@ -185,32 +185,32 @@
     </aside>
 
     {{-- MAIN CONTENT --}}
-    <div class="lg:ml-64 flex-1 flex flex-col min-h-screen">
+    <div class="lg:ml-64 flex-1 min-w-0 w-full flex flex-col min-h-screen">
 
         {{-- TOPBAR --}}
         <header class="bg-white border-b border-gray-200 px-4 lg:px-8 py-4 flex items-center justify-between sticky top-0 z-20">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 min-w-0">
                 {{-- Hamburger button (mobile only) --}}
                 <button onclick="toggleSidebar()"
-                    class="lg:hidden text-gray-500 hover:text-gray-700">
+                    class="lg:hidden text-gray-500 hover:text-gray-700 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                     </svg>
                 </button>
-                <div>
-                    <h1 class="text-lg lg:text-xl font-bold text-gray-800">{{ $title ?? 'Dashboard' }}</h1>
+                <div class="min-w-0">
+                    <h1 class="text-lg lg:text-xl font-bold text-gray-800 truncate">{{ $title ?? 'Dashboard' }}</h1>
                     @if(isset($subtitle) && $subtitle)
-                    <p class="text-gray-500 text-xs lg:text-sm mt-0.5 hidden sm:block">{{ $subtitle }}</p>
+                    <p class="text-gray-500 text-xs lg:text-sm mt-0.5 hidden sm:block truncate">{{ $subtitle }}</p>
                     @endif
                 </div>
             </div>
-            <div class="text-xs lg:text-sm text-gray-500 hidden md:block">
+            <div class="text-xs lg:text-sm text-gray-500 hidden md:block flex-shrink-0">
                 {{ now()->translatedFormat('l, d F Y') }}
             </div>
         </header>
 
         {{-- PAGE CONTENT --}}
-        <main class="flex-1 p-4 lg:p-8">
+        <main class="flex-1 min-w-0 w-full p-4 lg:p-8">
             {{ $slot }}
         </main>
 

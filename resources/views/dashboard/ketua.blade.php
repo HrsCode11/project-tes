@@ -3,57 +3,57 @@
     <x-slot name="subtitle">Selamat datang, {{ auth()->user()->nama_lengkap }}</x-slot>
 
     {{-- STAT CARDS --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 mb-6">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-5 mb-6">
 
-        <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition">
-            <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-                    <x-icon name="wallet" class="w-5 h-5 text-blue-500" />
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5 hover:shadow-md transition">
+            <div class="flex items-center justify-between mb-2 sm:mb-3">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+                    <x-icon name="wallet" class="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
                 </div>
             </div>
-            <div class="text-2xl font-bold font-mono {{ $saldoKas >= 0 ? 'text-gray-800' : 'text-red-500' }}">
+            <div class="text-base sm:text-2xl font-bold font-mono {{ $saldoKas >= 0 ? 'text-gray-800' : 'text-red-500' }}">
                 Rp {{ number_format($saldoKas, 0, ',', '.') }}
             </div>
-            <div class="text-gray-500 text-sm mt-1">Total Saldo Kas</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Total Saldo Kas</div>
         </div>
 
-        <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition">
-            <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
-                    <x-icon name="trending-up" class="w-5 h-5 text-green-600" />
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5 hover:shadow-md transition">
+            <div class="flex items-center justify-between mb-2 sm:mb-3">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-xl flex items-center justify-center">
+                    <x-icon name="trending-up" class="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                 </div>
             </div>
-            <div class="text-2xl font-bold font-mono text-green-600">
+            <div class="text-base sm:text-2xl font-bold font-mono text-green-600">
                 Rp {{ number_format($totalPemasukanBulanIni, 0, ',', '.') }}
             </div>
-            <div class="text-gray-500 text-sm mt-1">Pemasukan Bulan Ini</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Pemasukan Bulan Ini</div>
         </div>
 
-        <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition">
-            <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
-                    <x-icon name="trending-down" class="w-5 h-5 text-orange-500" />
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5 hover:shadow-md transition">
+            <div class="flex items-center justify-between mb-2 sm:mb-3">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+                    <x-icon name="trending-down" class="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
                 </div>
             </div>
-            <div class="text-2xl font-bold font-mono text-red-500">
+            <div class="text-base sm:text-2xl font-bold font-mono text-red-500">
                 Rp {{ number_format($totalPengeluaranBulanIni, 0, ',', '.') }}
             </div>
-            <div class="text-gray-500 text-sm mt-1">Pengeluaran Bulan Ini</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Pengeluaran Bulan Ini</div>
         </div>
 
-        <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition">
-            <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
-                    <x-icon name="exclamation-triangle" class="w-5 h-5 text-red-500" />
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5 hover:shadow-md transition">
+            <div class="flex items-center justify-between mb-2 sm:mb-3">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-red-50 rounded-xl flex items-center justify-center">
+                    <x-icon name="exclamation-triangle" class="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
                 </div>
-                <span class="text-xs font-semibold bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                <span class="text-[11px] sm:text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 sm:py-1 rounded-full">
                     {{ $jumlahWargaTunggak }} warga
                 </span>
             </div>
-            <div class="text-2xl font-bold font-mono text-red-500">
+            <div class="text-base sm:text-2xl font-bold font-mono text-red-500">
                 Rp {{ number_format($totalTunggakan, 0, ',', '.') }}
             </div>
-            <div class="text-gray-500 text-sm mt-1">Total Tunggakan</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Total Tunggakan</div>
         </div>
 
     </div>

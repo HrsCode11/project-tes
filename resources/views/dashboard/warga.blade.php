@@ -3,26 +3,26 @@
     <x-slot name="subtitle">Selamat datang, {{ auth()->user()->nama_lengkap }}</x-slot>
 
     {{-- STAT CARDS --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-6">
+    <div class="grid grid-cols-2 gap-3 sm:gap-5 mb-6">
 
-        <div class="bg-white rounded-xl border border-gray-200 p-5">
-            <div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center mb-3">
-                <x-icon name="clock" class="w-5 h-5 text-red-500" />
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-red-50 rounded-xl flex items-center justify-center mb-2 sm:mb-3">
+                <x-icon name="clock" class="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
             </div>
-            <div class="text-2xl font-bold font-mono text-red-500">
+            <div class="text-base sm:text-2xl font-bold font-mono text-red-500">
                 Rp {{ number_format($totalHarusBayar, 0, ',', '.') }}
             </div>
-            <div class="text-gray-500 text-sm mt-1">Total yang Harus Dibayar</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Total yang Harus Dibayar</div>
         </div>
 
-        <div class="bg-white rounded-xl border border-gray-200 p-5">
-            <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center mb-3">
-                <x-icon name="check-circle" class="w-5 h-5 text-green-600" />
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-xl flex items-center justify-center mb-2 sm:mb-3">
+                <x-icon name="check-circle" class="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
             </div>
-            <div class="text-2xl font-bold font-mono text-green-600">
+            <div class="text-base sm:text-2xl font-bold font-mono text-green-600">
                 Rp {{ number_format($totalSudahBayar, 0, ',', '.') }}
             </div>
-            <div class="text-gray-500 text-sm mt-1">Total Sudah Dibayar</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Total Sudah Dibayar</div>
         </div>
 
     </div>

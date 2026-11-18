@@ -4,15 +4,15 @@
     <x-slot name="subtitle">Catat pengeluaran operasional dan kegiatan RT/RW</x-slot>
 
     {{-- Stat Card --}}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-5">
-        <div class="bg-white rounded-xl border border-gray-200 p-5">
-        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-3">
-            <x-icon name="arrow-up-tray" class="w-5 h-5 text-red-600" />
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5 mb-5">
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-2 sm:mb-3">
+            <x-icon name="arrow-up-tray" class="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
         </div>
-        <div class="text-2xl font-bold font-mono text-red-500">
+        <div class="text-base sm:text-2xl font-bold font-mono text-red-500">
             Rp {{ number_format($totalBulanIni, 0, ',', '.') }}
         </div>
-            <div class="text-gray-500 text-sm mt-1">Total Pengeluaran Bulan Ini</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Total Pengeluaran Bulan Ini</div>
         </div>
     </div>
 

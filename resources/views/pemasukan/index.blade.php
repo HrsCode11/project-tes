@@ -4,33 +4,33 @@
     <x-slot name="subtitle">Rekap pemasukan kas RT/RW bulan ini</x-slot>
 
     {{-- Stat Cards --}}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-6">
-        <div class="bg-white rounded-xl border border-gray-200 p-5">
-        <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center mb-3">
-            <x-icon name="arrow-down-tray" class="w-5 h-5 text-green-600" />
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5 mb-6">
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-green-50 rounded-xl flex items-center justify-center mb-2 sm:mb-3">
+            <x-icon name="arrow-down-tray" class="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
         </div>
-            <div class="text-2xl font-bold font-mono text-green-600">
+            <div class="text-base sm:text-2xl font-bold font-mono text-green-600">
                 Rp {{ number_format($totalBulanIni, 0, ',', '.') }}
             </div>
-            <div class="text-gray-500 text-sm mt-1">Total Pemasukan Bulan Ini</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Total Pemasukan Bulan Ini</div>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-5">
-        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-3">
-            <x-icon name="receipt" class="w-5 h-5 text-blue-600" />
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-2 sm:mb-3">
+            <x-icon name="receipt" class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
         </div>            
-        <div class="text-2xl font-bold font-mono text-blue-600">
+        <div class="text-base sm:text-2xl font-bold font-mono text-blue-600">
                 Rp {{ number_format($totalIuranBulanIni, 0, ',', '.') }}
             </div>
-            <div class="text-gray-500 text-sm mt-1">Dari Iuran Warga</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Dari Iuran Warga</div>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-5">
-        <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center mb-3">
-            <x-icon name="gift" class="w-5 h-5 text-purple-600" />
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5 col-span-2 sm:col-span-1">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-50 rounded-xl flex items-center justify-center mb-2 sm:mb-3">
+            <x-icon name="gift" class="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
         </div>            
-            <div class="text-2xl font-bold font-mono text-purple-600">
+            <div class="text-base sm:text-2xl font-bold font-mono text-purple-600">
                 Rp {{ number_format($totalNonIuranBulanIni, 0, ',', '.') }}
             </div>
-            <div class="text-gray-500 text-sm mt-1">Donasi, Sewa, Subsidi, dll.</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Donasi, Sewa, Subsidi, dll.</div>
         </div>
     </div>
 

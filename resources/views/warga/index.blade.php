@@ -5,18 +5,18 @@
     @php $prefix = auth()->user()->isKetuaRT() ? 'ketua' : 'bendahara'; @endphp
 
     {{-- Ringkasan --}}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
-        <div class="bg-white rounded-xl border border-gray-200 p-5">
-            <div class="text-2xl font-bold font-mono text-gray-800">{{ $ringkasan['total'] }}</div>
-            <div class="text-gray-500 text-sm mt-1">Total Warga Terdata</div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-5">
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5">
+            <div class="text-lg sm:text-2xl font-bold font-mono text-gray-800">{{ $ringkasan['total'] }}</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Total Warga Terdata</div>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-5">
-            <div class="text-2xl font-bold font-mono text-green-600">{{ $ringkasan['aktif'] }}</div>
-            <div class="text-gray-500 text-sm mt-1">Warga Aktif (ditagih iuran)</div>
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5">
+            <div class="text-lg sm:text-2xl font-bold font-mono text-green-600">{{ $ringkasan['aktif'] }}</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Warga Aktif (ditagih iuran)</div>
         </div>
-        <div class="bg-white rounded-xl border border-gray-200 p-5">
-            <div class="text-2xl font-bold font-mono text-orange-500">{{ $ringkasan['tanpa_akun'] }}</div>
-            <div class="text-gray-500 text-sm mt-1">Belum Punya Akun Login</div>
+        <div class="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5 col-span-2 sm:col-span-1">
+            <div class="text-lg sm:text-2xl font-bold font-mono text-orange-500">{{ $ringkasan['tanpa_akun'] }}</div>
+            <div class="text-gray-500 text-xs sm:text-sm mt-1">Belum Punya Akun Login</div>
         </div>
     </div>
 

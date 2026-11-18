@@ -72,8 +72,8 @@
                     <td class="px-5 py-4">
                         @if($item->bukti_path)
                         <a href="{{ Storage::url($item->bukti_path) }}" target="_blank"
-                            class="text-blue-500 hover:underline text-xs font-semibold">
-                            🖼️ Lihat
+                            class="text-blue-500 hover:underline text-xs font-semibold inline-flex items-center gap-1">
+                            <x-icon name="photo" class="w-4 h-4" /> Lihat
                         </a>
                         @else
                         <span class="text-gray-300 text-xs">—</span>

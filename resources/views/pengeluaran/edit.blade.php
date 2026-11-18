@@ -61,9 +61,9 @@
                 @if($pengeluaran->bukti_path)
                 <div class="mb-3">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Bukti Saat Ini</label>
-                    <a href="{{ route($prefix . '.pengeluaran.index') }}"
-                        class="text-blue-500 hover:underline text-sm">
-                        🖼️ Lihat bukti sekarang
+                    <a href="{{ Storage::url($pengeluaran->bukti_path) }}" target="_blank"
+                        class="text-blue-500 hover:underline text-sm inline-flex items-center gap-1.5">
+                        <x-icon name="photo" class="w-4 h-4" /> Lihat bukti sekarang
                     </a>
                 </div>
                 @endif

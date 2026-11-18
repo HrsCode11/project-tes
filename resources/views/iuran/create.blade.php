@@ -10,13 +10,13 @@
             </div>
 
             {{-- Info Warga --}}
-            <div class="mx-6 mt-4 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-700">
+            <div class="mx-4 sm:mx-6 mt-4 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-700">
             <x-icon name="exclamation-triangle" class="w-4 h-4 inline text-blue-500" /> Setelah disimpan...
                 <strong>{{ $jumlahWarga }} warga aktif</strong>.
             </div>
 
             @php $prefix = auth()->user()->isKetuaRT() ? 'ketua' : 'bendahara'; @endphp
-            <form action="{{ route($prefix . '.iuran.store') }}" method="POST" class="p-6">
+            <form action="{{ route($prefix . '.iuran.store') }}" method="POST" class="p-4 sm:p-6">
                 @csrf
 
                 {{-- Nama Iuran --}}
@@ -31,7 +31,7 @@
                 </div>
 
                 {{-- Nominal & Deadline --}}
-                <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Nominal per Warga (Rp)</label>
                         <input type="number" name="nominal" value="{{ old('nominal') }}" min="1000"

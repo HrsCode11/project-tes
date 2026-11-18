@@ -15,8 +15,8 @@
         </div>
 
         @forelse($tagihanBelumLunas as $t)
-        <div class="px-5 py-4 border-b border-gray-50 hover:bg-gray-50">
-            <div class="flex items-start justify-between">
+        <div class="px-4 sm:px-5 py-4 border-b border-gray-50 hover:bg-gray-50">
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
                 <div>
                     <div class="font-bold text-gray-800">{{ $t->iuran->nama_iuran }}</div>
                     <div class="text-gray-400 text-xs mt-1">
@@ -26,11 +26,11 @@
                     <div class="text-gray-400 text-xs mt-0.5">{{ $t->iuran->keterangan }}</div>
                     @endif
                 </div>
-                <div class="text-right">
+                <div class="sm:text-right flex sm:block items-center justify-between">
                     <div class="font-bold font-mono text-blue-500 text-lg">
                         Rp {{ number_format($t->nominal, 0, ',', '.') }}
                     </div>
-                    <span class="text-xs font-bold px-2 py-1 rounded-full
+                    <span class="text-xs font-bold px-2 py-1 rounded-full inline-block sm:mt-1
                         {{ $t->status === 'menunggu' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700' }}">
                         {{ $t->status === 'menunggu' ? 'Menunggu Konfirmasi' : 'Belum Bayar' }}
                     </span>
@@ -44,7 +44,7 @@
                 $adminVa      = \App\Services\MidtransService::hitungBiayaAdmin($nominalIuran, 'va');
             @endphp
             @if(in_array($t->status, ['belum_bayar', 'menunggu']))
-            <div class="mt-3 max-w-xs space-y-2">
+            <div class="mt-3 w-full sm:max-w-xs space-y-2">
                 <button type="button"
                     onclick="bayar({{ $t->id }}, 'qris', this)"
                     class="w-full flex items-center justify-between border border-purple-200 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg px-3.5 py-2 text-xs transition">

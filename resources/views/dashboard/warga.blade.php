@@ -3,7 +3,7 @@
     <x-slot name="subtitle">Selamat datang, {{ auth()->user()->nama_lengkap }}</x-slot>
 
     {{-- STAT CARDS --}}
-    <div class="grid grid-cols-2 gap-5 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-6">
 
         <div class="bg-white rounded-xl border border-gray-200 p-5">
             <div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center mb-3">
@@ -27,7 +27,7 @@
 
     </div>
 
-    <div class="grid grid-cols-2 gap-5">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
 
         {{-- Tagihan Belum Lunas --}}
         <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">

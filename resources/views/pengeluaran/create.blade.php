@@ -9,7 +9,7 @@
                 <div class="font-bold text-gray-800">Form Tambah Pengeluaran</div>
             </div>
             {{-- enctype multipart untuk upload file bukti --}}
-            <form action="{{ route($prefix . '.pengeluaran.store') }}" method="POST" enctype="multipart/form-data" class="p-6">
+            <form action="{{ route($prefix . '.pengeluaran.store') }}" method="POST" enctype="multipart/form-data" class="p-4 sm:p-6">
                 @csrf
 
                 <div class="mb-4">
@@ -22,7 +22,7 @@
                     @enderror
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Kategori</label>
                         <select name="kategori"
@@ -50,7 +50,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Penerima <span class="text-gray-400 font-normal">(opsional)</span>

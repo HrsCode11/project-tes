@@ -4,51 +4,51 @@
     <x-slot name="subtitle">{{ $iuran->nama_iuran }} · Rp {{ number_format($iuran->nominal, 0, ',', '.') }}</x-slot>
 
     {{-- Info Iuran --}}
-    <div class="grid grid-cols-4 gap-4 mb-5">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-5">
         <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
-            <div class="text-2xl font-bold font-mono text-blue-500">{{ $iuran->totalWarga() }}</div>
+            <div class="text-xl sm:text-2xl font-bold font-mono text-blue-500">{{ $iuran->totalWarga() }}</div>
             <div class="text-gray-500 text-xs mt-1">Total Warga</div>
         </div>
         <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
-            <div class="text-2xl font-bold font-mono text-green-500">{{ $iuran->jumlahLunas() }}</div>
+            <div class="text-xl sm:text-2xl font-bold font-mono text-green-500">{{ $iuran->jumlahLunas() }}</div>
             <div class="text-gray-500 text-xs mt-1">Sudah Lunas</div>
         </div>
         <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
-            <div class="text-2xl font-bold font-mono text-red-500">
+            <div class="text-xl sm:text-2xl font-bold font-mono text-red-500">
                 {{ $iuran->tagihan()->where('status', 'belum_bayar')->count() }}
             </div>
             <div class="text-gray-500 text-xs mt-1">Belum Bayar</div>
         </div>
         <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
-            <div class="text-2xl font-bold font-mono text-gray-700">{{ $iuran->persentaseLunas() }}%</div>
+            <div class="text-xl sm:text-2xl font-bold font-mono text-gray-700">{{ $iuran->persentaseLunas() }}%</div>
             <div class="text-gray-500 text-xs mt-1">Tingkat Lunas</div>
         </div>
     </div>
 
     {{-- Tabel Tagihan --}}
     <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-5 py-4 border-b border-gray-100">
             <div>
                 <div class="font-bold text-gray-800">Daftar Tagihan per Warga</div>
                 <div class="text-gray-400 text-xs mt-0.5">
                     Deadline: {{ $iuran->deadline->format('d M Y') }}
                 </div>
             </div>
-            @if($iuran->status === 'aktif')
-            <a href="{{ route($prefix . '.iuran.pengingat', $iuran) }}"
-            class="bg-green-500 hover:bg-green-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition inline-flex items-center gap-2">
-
-                <img src="{{ asset('icons/whatsapp.svg') }}"
-                    alt="WhatsApp"
-                    class="w-4 h-4">
-
-                <span>Kirim Pengingat WA</span>
-            </a>
-            @endif
-            <a href="{{ route($prefix . '.iuran.index') }}"
-                class="text-blue-500 text-sm font-semibold hover:underline">
-                ← Kembali
-            </a>
+            <div class="flex items-center gap-3 flex-wrap">
+                @if($iuran->status === 'aktif')
+                <a href="{{ route($prefix . '.iuran.pengingat', $iuran) }}"
+                class="bg-green-500 hover:bg-green-600 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-lg transition inline-flex items-center gap-2">
+                    <img src="{{ asset('icons/whatsapp.svg') }}"
+                        alt="WhatsApp"
+                        class="w-4 h-4">
+                    <span>Kirim Pengingat WA</span>
+                </a>
+                @endif
+                <a href="{{ route($prefix . '.iuran.index') }}"
+                    class="text-blue-500 text-xs sm:text-sm font-semibold hover:underline">
+                    ← Kembali
+                </a>
+            </div>
         </div>
 
         <div class="overflow-x-auto">

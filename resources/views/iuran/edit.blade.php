@@ -10,7 +10,7 @@
             </div>
 
             @php $prefix = auth()->user()->isKetuaRT() ? 'ketua' : 'bendahara'; @endphp
-            <form action="{{ route($prefix . '.iuran.update', $iuran) }}" method="POST" class="p-6">
+            <form action="{{ route($prefix . '.iuran.update', $iuran) }}" method="POST" class="p-4 sm:p-6">
                 @csrf
                 @method('PUT')
 
@@ -24,7 +24,7 @@
                     @enderror
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Nominal (Rp)</label>
                         <input type="number" name="nominal" value="{{ old('nominal', $iuran->nominal) }}"

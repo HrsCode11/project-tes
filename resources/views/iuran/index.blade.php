@@ -4,18 +4,18 @@
     <x-slot name="subtitle">Buat dan kelola iuran insidental RT/RW</x-slot>
 
     {{-- Header --}}
-    <div class="flex items-center justify-between mb-5">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div>
             <p class="text-gray-500 text-sm">Klik kartu iuran untuk melihat detail tagihan per warga</p>
         </div>
         <a href="{{ route($prefix . '.iuran.create') }}"
-            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg text-sm transition flex items-center gap-2">
+            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2.5 rounded-lg text-sm transition inline-flex items-center justify-center gap-2 self-start sm:self-auto">
             ＋ Buat Iuran Baru
         </a>
     </div>
 
     {{-- Grid Kartu Iuran --}}
-    <div class="grid grid-cols-3 gap-5 mb-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 mb-5">
         @foreach($iuran as $item)
         @php
             // Tentukan warna & label berdasarkan status

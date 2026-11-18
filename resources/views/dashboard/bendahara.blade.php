@@ -3,7 +3,7 @@
     <x-slot name="subtitle">Selamat datang, {{ auth()->user()->nama_lengkap }}</x-slot>
 
     {{-- STAT CARDS --}}
-    <div class="grid grid-cols-4 gap-5 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 mb-6">
 
         <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition">
             <div class="flex items-center justify-between mb-3">
@@ -59,7 +59,7 @@
     </div>
 
     {{-- ROW 2 --}}
-    <div class="grid grid-cols-2 gap-5 mb-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 mb-6">
 
         {{-- Transaksi Terbaru --}}
         <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -126,8 +126,8 @@
             <div class="font-bold text-gray-800">Status Pembayaran Iuran</div>
             <div class="text-gray-400 text-xs mt-0.5">Rekap semua iuran aktif</div>
         </div>
-        <div class="p-5">
-            <div class="grid grid-cols-4 gap-4">
+        <div class="p-4 sm:p-5">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div class="text-center p-4 bg-blue-50 rounded-xl">
                     <div class="text-3xl font-bold text-blue-600 font-mono">{{ $lunasDigital }}</div>
                     <div class="text-sm text-gray-500 mt-1">Lunas Digital</div>

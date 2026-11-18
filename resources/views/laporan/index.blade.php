@@ -2,40 +2,40 @@
     <x-slot name="title">Ekspor Laporan</x-slot>
     <x-slot name="subtitle">Generate dan unduh laporan keuangan RT/RW</x-slot>
 
-    <div class="grid grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6">
 
         {{-- Form Ekspor --}}
         <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100">
+            <div class="px-4 sm:px-6 py-4 border-b border-gray-100">
                 <div class="font-bold text-gray-800">Generate Laporan</div>
                 <div class="text-gray-400 text-xs mt-0.5">Pilih jenis laporan dan format file</div>
             </div>
             <form action="{{ route(auth()->user()->isKetuaRT() ? 'ketua.laporan.export' : 'bendahara.laporan.export') }}"
-                method="POST" class="p-6">
+                method="POST" class="p-4 sm:p-6">
                 @csrf
 
                 {{-- Jenis Laporan --}}
                 <div class="mb-5">
                     <label class="block text-sm font-semibold text-gray-700 mb-3">Jenis Laporan</label>
-                    <div class="grid grid-cols-3 gap-3">
+                    <div class="grid grid-cols-3 gap-2 sm:gap-3">
                         <label class="cursor-pointer">
                             <input type="radio" name="jenis" value="bulanan" class="sr-only peer" checked>
-                            <div class="border-2 border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition">
-                                <x-icon name="document-chart" class="w-6 h-6 mx-auto mb-1 text-gray-400" />
+                            <div class="border-2 border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-2.5 sm:p-3 text-center transition">
+                                <x-icon name="document-chart" class="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 text-gray-400" />
                                 <div class="text-xs font-semibold">Bulanan</div>
                             </div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="jenis" value="tahunan" class="sr-only peer">
-                            <div class="border-2 border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition">
-                                <x-icon name="document-chart" class="w-6 h-6 mx-auto mb-1 text-gray-400" />
+                            <div class="border-2 border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-2.5 sm:p-3 text-center transition">
+                                <x-icon name="document-chart" class="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 text-gray-400" />
                                 <div class="text-xs font-semibold">Tahunan</div>
                             </div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="jenis" value="iuran" class="sr-only peer">
-                            <div class="border-2 border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-3 text-center transition">
-                                <x-icon name="receipt" class="w-6 h-6 mx-auto mb-1 text-gray-400" />
+                            <div class="border-2 border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 rounded-xl p-2.5 sm:p-3 text-center transition">
+                                <x-icon name="receipt" class="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1 text-gray-400" />
                                 <div class="text-xs font-semibold">Per Iuran</div>
                             </div>
                         </label>
@@ -44,7 +44,7 @@
 
                 {{-- Filter Bulanan --}}
                 <div id="filter-bulanan" class="mb-4">
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Bulan</label>
                             <select name="bulan" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">

@@ -4,7 +4,7 @@
     <x-slot name="subtitle">Catat pengeluaran operasional dan kegiatan RT/RW</x-slot>
 
     {{-- Stat Card --}}
-    <div class="grid grid-cols-3 gap-5 mb-5">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-5">
         <div class="bg-white rounded-xl border border-gray-200 p-5">
         <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-3">
             <x-icon name="arrow-up-tray" class="w-5 h-5 text-red-600" />
@@ -17,13 +17,13 @@
     </div>
 
     <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-5 py-4 border-b border-gray-100">
             <div>
                 <div class="font-bold text-gray-800">Riwayat Pengeluaran</div>
                 <div class="text-gray-400 text-xs mt-0.5">Total {{ $pengeluaran->total() }} pengeluaran</div>
             </div>
             <a href="{{ route($prefix . '.pengeluaran.create') }}"
-                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg text-sm transition">
+                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg text-sm transition self-start sm:self-auto">
                 ＋ Tambah Pengeluaran
             </a>
         </div>

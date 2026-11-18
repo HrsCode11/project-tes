@@ -8,7 +8,7 @@
             <div class="px-6 py-4 border-b border-gray-100">
                 <div class="font-bold text-gray-800">Form Tambah Pemasukan</div>
             </div>
-            <form action="{{ route($prefix . '.pemasukan.store') }}" method="POST" class="p-6">
+            <form action="{{ route($prefix . '.pemasukan.store') }}" method="POST" class="p-4 sm:p-6">
                 @csrf
 
                 <div class="mb-4">
@@ -21,7 +21,7 @@
                     @enderror
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Kategori</label>
                         <select name="kategori"
@@ -48,7 +48,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Sumber <span class="text-gray-400 font-normal">(opsional)</span>

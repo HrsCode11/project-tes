@@ -15,7 +15,7 @@
     </div>
 
     {{-- Grid Kartu Iuran --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 mb-5">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
         @foreach($iuran as $item)
         @php
             // Tentukan warna & label berdasarkan status
@@ -35,27 +35,26 @@
             $persen = $item->persentaseLunas();
         @endphp
 
-        <div class="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition
+        <div class="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition
             {{ $item->status === 'aktif' ? 'border-blue-300' : '' }}">
 
             {{-- Top --}}
-            <div class="flex items-start justify-between mb-3">
-            <div class="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center">
-                <x-icon name="receipt" class="w-5 h-5 text-yellow-600" />
-            </div>
-                <span class="text-xs font-bold px-2 py-1 rounded-full {{ $statusColor }}">
+            <div class="flex items-start justify-between mb-2">
+                <div class="w-9 h-9 bg-yellow-50 rounded-xl flex items-center justify-center">
+                    <x-icon name="receipt" class="w-4 h-4 text-yellow-600" />
+                </div>
+                <span class="text-xs font-bold px-2 py-0.5 rounded-full {{ $statusColor }}">
                     {{ $statusLabel }}
                 </span>
             </div>
 
             {{-- Info --}}
-            <div class="font-bold text-gray-800 mb-1">{{ $item->nama_iuran }}</div>
-            <div class="text-blue-500 font-bold font-mono text-lg mb-3">
+            <div class="font-bold text-gray-800 text-sm mb-0.5">{{ $item->nama_iuran }}</div>
+            <div class="text-blue-500 font-bold font-mono text-base mb-2">
                 Rp {{ number_format($item->nominal, 0, ',', '.') }}
             </div>
-            <div class="text-gray-400 text-xs mb-3 leading-relaxed">
-                Dibuat: {{ $item->created_at->format('d M Y') }}<br>
-                Deadline: {{ $item->deadline->format('d M Y') }}<br>
+            <div class="text-gray-400 text-xs mb-2.5 leading-snug">
+                Dibuat: {{ $item->created_at->format('d M Y') }} · Deadline: {{ $item->deadline->format('d M Y') }}<br>
                 {{ $total }} warga · Target Rp {{ number_format($item->nominal * $total, 0, ',', '.') }}
             </div>
 
@@ -64,13 +63,13 @@
                 <div class="h-full rounded-full bg-blue-500 transition-all"
                     style="width: {{ $persen }}%"></div>
             </div>
-            <div class="flex justify-between text-xs text-gray-400 font-mono mb-4">
+            <div class="flex justify-between text-xs text-gray-400 font-mono mb-3">
                 <span>{{ $lunas }}/{{ $total }} lunas</span>
                 <span>{{ $persen }}%</span>
             </div>
 
             {{-- Aksi --}}
-            <div class="flex gap-2 pt-3 border-t border-gray-100">
+            <div class="flex gap-2 pt-2.5 border-t border-gray-100">
                 <a href="{{ route($prefix . '.iuran.show', $item) }}"
                     class="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-2 rounded-lg text-center transition">
                     <x-icon name="eye" class="w-3.5 h-3.5 inline" /> Lihat Tagihan
@@ -102,7 +101,7 @@
 
         {{-- Kartu Tambah Baru --}}
         <a href="{{ route($prefix . '.iuran.create') }}"
-            class="border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2 py-10 min-h-[220px] hover:border-blue-300 hover:bg-blue-50 transition cursor-pointer">
+            class="border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2 py-8 hover:border-blue-300 hover:bg-blue-50 transition cursor-pointer">
             <x-icon name="plus" class="w-4 h-4" /> Buat Iuran Baru
         </a>
     </div>
